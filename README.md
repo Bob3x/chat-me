@@ -28,7 +28,7 @@ A mobile chat application built with React Native and Expo, allowing users to se
 1. Clone the repository
 
 ```bash
-git clone https://github.com/bob3x/chat-me.git"
+git clone https://github.com/bob3x/chat-me.git
 ```
 
 ## Screenshots
