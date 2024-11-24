@@ -1,15 +1,22 @@
-import { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, TextInput, ImageBackground } from 'react-native';
+import { useState } from "react";
+import {
+    StyleSheet,
+    View,
+    Text,
+    TouchableOpacity,
+    TextInput,
+    ImageBackground
+} from "react-native";
 
 const Start = ({ navigation }) => {
-    const [name, setName] = useState('');
-    const [backgroundColor, setBackgroundColor] = useState('');
-    const colors = ['#090C08', '#474056', '#8A95A5', '#B9C6AE'];
+    const [name, setName] = useState("");
+    const [backgroundColor, setBackgroundColor] = useState("");
+    const colors = ["#090C08", "#474056", "#8A95A5", "#B9C6AE"];
 
     return (
         <View style={styles.container}>
             <ImageBackground
-                source={require('../assets/Background.png')}
+                source={require("../assets/Background.png")}
                 style={styles.imgContainer}>
                 <Text style={styles.appTitle}>Chat Me</Text>
                 <View style={styles.innerContainer}>
@@ -27,7 +34,8 @@ const Start = ({ navigation }) => {
                                 style={[
                                     styles.colorCircle,
                                     { backgroundColor: color },
-                                    backgroundColor === color && styles.selectedColor
+                                    backgroundColor === color &&
+                                        styles.selectedColor
                                 ]}
                                 onPress={() => setBackgroundColor(color)}
                             />
@@ -37,7 +45,7 @@ const Start = ({ navigation }) => {
                         title="Start Chatting"
                         style={styles.button}
                         onPress={() =>
-                            navigation.navigate('Chat', {
+                            navigation.navigate("Chat", {
                                 name: name,
                                 backgroundColor: backgroundColor
                             })
@@ -58,29 +66,29 @@ const styles = StyleSheet.create({
 
     imgContainer: {
         flex: 1,
-        width: '100%',
-        height: '100%', // Add explicit height
-        justifyContent: 'center',
-        alignItems: 'center'
+        width: "100%",
+        height: "100%", // Add explicit height
+        justifyContent: "center",
+        alignItems: "center"
     },
 
     appTitle: {
         fontSize: 34,
-        fontWeight: 'bold',
-        color: '#FFFFFF',
+        fontWeight: "bold",
+        color: "#FFFFFF",
         marginBottom: 30
     },
 
     innerContainer: {
-        width: '88%',
-        alignItems: 'center',
-        backgroundColor: '#FFFFFF',
+        width: "88%",
+        alignItems: "center",
+        backgroundColor: "#FFFFFF",
         padding: 20,
         borderRadius: 10
     },
 
     textInput: {
-        width: '88%',
+        width: "88%",
         padding: 15,
         borderWidth: 1,
         borderRadius: 5,
@@ -91,15 +99,15 @@ const styles = StyleSheet.create({
 
     textColors: {
         fontSize: 16,
-        fontWeight: '300',
-        color: '#171717',
+        fontWeight: "300",
+        color: "#171717",
         marginBottom: 10
     },
 
     colorsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: '80%',
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: "80%",
         marginBottom: 20
     },
 
@@ -112,20 +120,20 @@ const styles = StyleSheet.create({
 
     selectedColor: {
         borderWidth: 2,
-        borderColor: '#757083'
+        borderColor: "#757083"
     },
 
     button: {
-        backgroundColor: '#757083',
+        backgroundColor: "#757083",
         borderRadius: 8,
         padding: 10,
-        alignItems: 'center'
+        alignItems: "center"
     },
 
     buttonText: {
         fontSize: 16,
         fontWeight: 600,
-        color: '#FFFFFF'
+        color: "#FFFFFF"
     }
 });
 
