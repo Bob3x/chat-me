@@ -1,12 +1,6 @@
 import { useState, useEffect } from "react";
 import { GiftedChat, Bubble } from "react-native-gifted-chat";
-import {
-    StyleSheet,
-    View,
-    Text,
-    Platform,
-    KeyboardAvoidingView
-} from "react-native";
+import { StyleSheet, View, Platform, KeyboardAvoidingView } from "react-native";
 
 const Chat = ({ route, navigation }) => {
     const [messages, setMessages] = useState([]);
@@ -18,6 +12,12 @@ const Chat = ({ route, navigation }) => {
         setMessages([
             {
                 _id: 1,
+                text: "This is a system message",
+                createdAt: new Date(),
+                system: true
+            },
+            {
+                _id: 2,
                 text: "Hello developer",
                 createdAt: new Date(),
                 user: {
@@ -25,12 +25,6 @@ const Chat = ({ route, navigation }) => {
                     name: "React Native",
                     avatar: "https://placeimg.com/140/140/any"
                 }
-            },
-            {
-                _id: 2,
-                text: "This is a system message",
-                createdAt: new Date(),
-                system: true
             }
         ]);
     }, [name]);
@@ -73,10 +67,10 @@ const Chat = ({ route, navigation }) => {
                 renderBubble={renderBubble}
                 onSend={(messages) => onSend(messages)}
                 user={{
-                    _id: 1
+                    _id: 2
                 }}
             />
-            {Platform.OS === "android" ? (
+            {Platform.OS === "android" || Platform.OS === "ios" ? (
                 <KeyboardAvoidingView behavior="height" />
             ) : null}
         </View>
@@ -85,8 +79,7 @@ const Chat = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: "left"
+        flex: 1
     }
 });
 
