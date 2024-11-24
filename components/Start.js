@@ -21,6 +21,9 @@ const Start = ({ navigation }) => {
                 <Text style={styles.appTitle}>Chat Me</Text>
                 <View style={styles.innerContainer}>
                     <TextInput
+                        accessible={true}
+                        accessibilityLabel="Username input field"
+                        accessibilityHint="Enter your username"
                         style={styles.textInput}
                         value={name}
                         onChangeText={setName}
@@ -29,8 +32,12 @@ const Start = ({ navigation }) => {
                     <Text style={styles.textColors}>Select your Backgroud</Text>
                     <View style={styles.colorsContainer}>
                         {colors.map((color, index) => (
-                            <TouchableOpacity // background colors picker
+                            <TouchableOpacity // background color picker
                                 key={index}
+                                accessible={true}
+                                accessibilityRole="button"
+                                accessibilityLabel="Color picker"
+                                accessibilityHint="Choose your chat's background color"
                                 style={[
                                     styles.colorCircle,
                                     { backgroundColor: color },
@@ -42,7 +49,10 @@ const Start = ({ navigation }) => {
                         ))}
                     </View>
                     <TouchableOpacity // Chat button (switch screens)
-                        title="Start Chatting"
+                        accesible={true}
+                        accessibilityLabel="Start Chatting"
+                        accessibilityRole="button"
+                        accessebilityHint="Open your chat screen"
                         style={styles.button}
                         onPress={() =>
                             navigation.navigate("Chat", {
