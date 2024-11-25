@@ -5,18 +5,27 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Start from "./components/Start";
 import Chat from "./components/Chat";
-
+import {
+    EXPO_PUBLIC_FIREBASE_API_KEY,
+    EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+    EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    EXPO_PUBLIC_FIREBASE_APP_ID
+} from "@env";
 const Stack = createNativeStackNavigator();
 
 const App = () => {
+    console.log("Env vars loaded:", !!process.env.EXPO_PUBLIC_FIREBASE_API_KEY);
     const firebaseConfig = {
-        apiKey: "AIzaSyA5ypyfjPuQsCNqWroE5uBFz7LEpU1l0lg",
-        authDomain: "chat-me-app-26012.firebaseapp.com",
-        projectId: "chat-me-app-26012",
-        storageBucket: "chat-me-app-26012.firebasestorage.app",
-        messagingSenderId: "434792060955",
-        appId: "1:434792060955:web:d2aa2bd0a84ff73c3a40be"
+        apiKey: EXPO_PUBLIC_FIREBASE_API_KEY,
+        authDomain: EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+        projectId: EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+        storageBucket: EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+        appId: EXPO_PUBLIC_FIREBASE_APP_ID
     };
+    console.log("Firebase Config:", firebaseConfig);
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
 
@@ -27,7 +36,7 @@ const App = () => {
         <NavigationContainer>
             <Stack.Navigator initialRouteName="Start">
                 <Stack.Screen name="Start" component={Start} />
-                <Stack.Screen name="Chat" component={Chat}>
+                <Stack.Screen name="Chat">
                     {(props) => <Chat db={db} {...props} />}
                 </Stack.Screen>
             </Stack.Navigator>
