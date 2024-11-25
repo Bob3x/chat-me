@@ -52,9 +52,7 @@ const Start = ({ navigation }) => {
                 style={styles.imgContainer}>
                 <Text style={styles.appTitle}>Chat Me</Text>
                 <View style={styles.innerContainer}>
-                    {error ? (
-                        <Text style={styles.errorText}>{error}</Text>
-                    ) : null}
+                    {error ? <Text style={styles.errorText}>{error}</Text> : null}
                     <TextInput
                         style={[styles.textInput, error && styles.inputError]}
                         value={name}
@@ -76,8 +74,7 @@ const Start = ({ navigation }) => {
                                 style={[
                                     styles.colorCircle,
                                     { backgroundColor: color },
-                                    backgroundColor === color &&
-                                        styles.selectedColor
+                                    backgroundColor === color && styles.selectedColor
                                 ]}
                                 onPress={() => setBackgroundColor(color)}
                             />
@@ -88,10 +85,7 @@ const Start = ({ navigation }) => {
                         accessibilityLabel="Start Chatting"
                         accessibilityRole="Button"
                         accessibilityHint="Open your chat screen"
-                        style={[
-                            styles.button,
-                            isLoading && styles.buttonDisabled
-                        ]}
+                        style={[styles.button, isLoading && styles.buttonDisabled]}
                         onPress={signInUser}
                         disabled={isLoading}>
                         <Text style={styles.buttonText}>
