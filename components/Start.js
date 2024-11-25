@@ -5,13 +5,45 @@ import {
     Text,
     TouchableOpacity,
     TextInput,
-    ImageBackground
+    ImageBackground,
+    Alert
 } from "react-native";
+import { getAuth, signInAnonymously } from "firebase/auth";
+import PropTypes from "prop-types";
 
 const Start = ({ navigation }) => {
+    // Set username and background color
     const [name, setName] = useState("");
     const [backgroundColor, setBackgroundColor] = useState("");
+    const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
     const colors = ["#090C08", "#474056", "#8A95A5", "#B9C6AE"];
+
+    // Sign in
+    const signInUser = async () => {
+        if (!name.trim()) {
+            setError("Please enter a username");
+            return;
+        }
+        setIsLoading(true);
+        setError("");
+
+        try {
+            const auth = getAuth();
+            const result = await signInAnonymously(auth);
+            navigation.navigate("Chat", {
+                userID: result.user.uid,
+                name: name,
+                backgroundColor: backgroundColor
+            });
+        } catch (err) {
+            setError("Unable to sign in, try again later!");
+            console.error("Sing in failed!", err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -20,14 +52,17 @@ const Start = ({ navigation }) => {
                 style={styles.imgContainer}>
                 <Text style={styles.appTitle}>Chat Me</Text>
                 <View style={styles.innerContainer}>
+                    {error ? (
+                        <Text style={styles.errorText}>{error}</Text>
+                    ) : null}
                     <TextInput
-                        accessible={true}
-                        accessibilityLabel="Username input field"
-                        accessibilityHint="Enter your username"
-                        style={styles.textInput}
+                        style={[styles.textInput, error && styles.inputError]}
                         value={name}
                         onChangeText={setName}
                         placeholder="Type your username"
+                        accessible={true}
+                        accessibilityLabel="Username input"
+                        accessibilityHint="Enter your username"
                     />
                     <Text style={styles.textColors}>Select your Backgroud</Text>
                     <View style={styles.colorsContainer}>
@@ -51,21 +86,26 @@ const Start = ({ navigation }) => {
                     <TouchableOpacity // Chat button (switch screens)
                         accesible={true}
                         accessibilityLabel="Start Chatting"
-                        accessibilityRole="button"
-                        accessebilityHint="Open your chat screen"
-                        style={styles.button}
-                        onPress={() =>
-                            navigation.navigate("Chat", {
-                                name: name,
-                                backgroundColor: backgroundColor
-                            })
-                        }>
-                        <Text style={styles.buttonText}>Start Chatting</Text>
+                        accessibilityRole="Button"
+                        accessibilityHint="Open your chat screen"
+                        style={[
+                            styles.button,
+                            isLoading && styles.buttonDisabled
+                        ]}
+                        onPress={signInUser}
+                        disabled={isLoading}>
+                        <Text style={styles.buttonText}>
+                            {isLoading ? "Signing in..." : "Start Chatting"}
+                        </Text>
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
         </View>
     );
+};
+
+Start.propTypes = {
+    navigation: PropTypes.object.isRequired
 };
 
 // Styles
@@ -144,6 +184,18 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 600,
         color: "#FFFFFF"
+    },
+
+    buttonDisabled: {
+        opacity: 0.7
+    },
+
+    inputError: {
+        borderColor: "red"
+    },
+    errorText: {
+        color: "red",
+        marginTop: 5
     }
 });
 
