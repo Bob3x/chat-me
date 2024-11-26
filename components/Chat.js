@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { GiftedChat, Bubble, Send, SystemMessage } from "react-native-gifted-chat";
-import { StyleSheet, View, Platform, KeyboardAvoidingView, ActivityIndicator } from "react-native";
+import { GiftedChat, Bubble, Send, InputToolbar, SystemMessage } from "react-native-gifted-chat";
+import {
+    StyleSheet,
+    View,
+    Text,
+    Platform,
+    KeyboardAvoidingView,
+    ActivityIndicator
+} from "react-native";
 import {
     collection,
     addDoc,
@@ -65,11 +72,17 @@ const Chat = ({ route, navigation, db }) => {
 
                     // Real-time messages listener
                     unsubMessages = onSnapshot(q, (querySnapshot) => {
-                        const newMessages = querySnapshot.docs.map((doc) => ({
-                            _id: doc.id,
-                            ...doc.data(),
-                            createdAt: new Date(doc.data().createdAt.toMillis())
-                        }));
+                        const newMessages = querySnapshot.docs.map((doc) => {
+                            const data = doc.data();
+                            const createdAt = data.createdAt
+                                ? new Date(data.createdAt.toMillis())
+                                : new Date();
+                            return {
+                                _id: doc.id,
+                                ...data,
+                                createdAt
+                            };
+                        });
                         setMessages(newMessages);
                         setIsLoading(false);
                     });
@@ -119,6 +132,15 @@ const Chat = ({ route, navigation, db }) => {
         );
     };
 
+    const renderInputToolbar = (props) => (
+        <InputToolbar
+            {...props}
+            containerStyle={styles.inputToolbar}
+            primaryStyle={styles.inputPrimary}
+            accessoryStyle={styles.inputAccessory}
+        />
+    );
+
     const renderSend = (props) => (
         <Send {...props} containerStyle={styles.sendContainer} disabled={isLoading}>
             {isLoading ? (
@@ -143,12 +165,11 @@ const Chat = ({ route, navigation, db }) => {
             <GiftedChat
                 messages={messages}
                 renderBubble={renderBubble}
+                renderInputToolbar={renderInputToolbar}
                 renderSend={renderSend}
                 renderLoading={renderLoading}
                 onSend={(messages) => onSend(messages)}
-                user={{
-                    _id: userID
-                }}
+                user={{ _id: userID }}
                 placeholder="Type a message"
                 alwaysShowSend
                 scrollToBottom
@@ -172,6 +193,25 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center"
     },
+
+    inputToolbar: {
+        backgroundColor: "#FFFFFF",
+        borderTopWidth: 1,
+        borderTopColor: "#E8E8E8",
+        borderRadius: 25,
+        marginHorizontal: 10,
+        marginBottom: 5,
+        paddingVertical: 5,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5
+    },
+
     sendContainer: {
         justifyContent: "center",
         alignItems: "center",
