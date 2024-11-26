@@ -18,7 +18,7 @@ const App = () => {
         appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID
     };
     console.log("Firebase Config:", firebaseConfig);
-    // Initialize Firebase and checks for dublicates
+    // Initialize Firebase and checks for duplicates
     const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
     // Initialize Cloud Firestore and get a reference to the service
