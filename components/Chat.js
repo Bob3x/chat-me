@@ -16,10 +16,10 @@ import {
     orderBy,
     serverTimestamp
 } from "firebase/firestore";
+import PropTypes from "prop-types";
 
-const Chat = ({ route, navigation, db }) => {
+const Chat = ({ route, navigation, db, isConnected }) => {
     const [messages, setMessages] = useState([]);
-    const [isConnected, setIsConnected] = useState(true);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
@@ -132,14 +132,20 @@ const Chat = ({ route, navigation, db }) => {
         );
     };
 
-    const renderInputToolbar = (props) => (
-        <InputToolbar
-            {...props}
-            containerStyle={styles.inputToolbar}
-            primaryStyle={styles.inputPrimary}
-            accessoryStyle={styles.inputAccessory}
-        />
-    );
+    const renderInputToolbar = (props) => {
+        if (isConnected)
+            return (
+                <InputToolbar
+                    {...props}
+                    containerStyle={styles.inputToolbar}
+                    primaryStyle={styles.inputPrimary}
+                    accessoryStyle={styles.inputAccessory}
+                />
+            );
+        else {
+            return null;
+        }
+    };
 
     const renderSend = (props) => (
         <Send {...props} containerStyle={styles.sendContainer} disabled={isLoading}>
@@ -147,7 +153,7 @@ const Chat = ({ route, navigation, db }) => {
                 <ActivityIndicator size="small" color="#c1f6f7" />
             ) : (
                 <View style={styles.sendButton}>
-                    <Text styles={styles.sendButtonText}>Send</Text>
+                    <Text style={styles.sendButtonText}>Send</Text>
                 </View>
             )}
         </Send>
@@ -182,6 +188,23 @@ const Chat = ({ route, navigation, db }) => {
             ) : null}
         </View>
     );
+};
+
+Chat.propTypes = {
+    route: PropTypes.shape({
+        params: PropTypes.shape({
+            name: PropTypes.string.isRequired,
+            backgroundColor: PropTypes.string.isRequired,
+            userID: PropTypes.string.isRequired
+        }).isRequired
+    }).isRequired,
+    navigation: PropTypes.shape({
+        setOptions: PropTypes.func.isRequired,
+        navigate: PropTypes.func.isRequired
+    }).isRequired,
+    db: PropTypes.object.isRequired,
+    isConnected: PropTypes.bool.isRequired,
+    storage: PropTypes.object.isRequired
 };
 
 const styles = StyleSheet.create({
