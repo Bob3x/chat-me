@@ -17,38 +17,84 @@ import {
     serverTimestamp
 } from "firebase/firestore";
 import PropTypes from "prop-types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Chat = ({ route, navigation, db, isConnected }) => {
     const [messages, setMessages] = useState([]);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [offlineMessages, setOfflineMessages] = useState([]);
 
     const { name, backgroundColor, userID } = route.params;
+
+    const syncOfflineMessages = async () => {
+        try {
+            const storedOfflineMessages = await AsyncStorage.getItem("offline_messages");
+            if (storedOfflineMessages && isConnected) {
+                const messages = JSON.parse(storedOfflineMessages);
+                for (let message of messages) {
+                    await addDoc(collection(db, "messages"), message);
+                }
+                await AsyncStorage.removeItem("offline_messages");
+                setOfflineMessages([]);
+            }
+        } catch (error) {
+            console.error("Error syncing offline messages:", error);
+            setError("Failed to sync messages");
+        }
+    };
+
+    useEffect(() => {
+        if (isConnected) {
+            syncOfflineMessages();
+        }
+    }, [isConnected]);
+
+    const cacheMessages = async (messagesToCache) => {
+        try {
+            await AsyncStorage.setItem("cached_messages", JSON.stringify(messagesToCache));
+        } catch (error) {
+            console.error("Error caching messages:", error);
+            setError("Failed to load messages");
+        }
+    };
+
+    const loadCachedMessages = async () => {
+        try {
+            const cached = await AsyncStorage.getItem("cached_messages");
+            if (cached) {
+                setMessages(JSON.parse(cached));
+            }
+        } catch (error) {
+            console.error("Error loading cached messages:", error);
+            setError("Failed to load cached messages");
+        }
+    };
 
     const onSend = async (newMessages) => {
         try {
             setIsLoading(true);
-            // Optimistic update
-            setMessages((previousMessages) => GiftedChat.append(previousMessages, newMessages));
 
             // Format and save message
             const message = {
                 ...newMessages[0],
-                createdAt: serverTimestamp(),
+                createdAt: isConnected ? serverTimestamp() : new Date(),
                 user: {
                     _id: userID,
                     name: name
                 }
             };
-
-            await addDoc(collection(db, "messages"), message);
+            if (isConnected) {
+                await addDoc(collection(db, "messages"), message);
+            } else {
+                const newOfflineMessages = [...offlineMessages, message];
+                setOfflineMessages(newOfflineMessages);
+                await AsyncStorage.setItem("offline_messages".JSON.stringify(offlineMessages));
+                setMessages((previousMessages) => GiftedChat.append(previousMessages, newMessages));
+            }
         } catch (error) {
             console.error("Failed to send message:", error);
             setError("Failed to send message");
-            // Rollback on error
-            setMessages((previousMessages) =>
-                previousMessages.filter((msg) => msg._id !== newMessages[0]._id)
-            );
         } finally {
             setIsLoading(false);
         }
@@ -57,40 +103,40 @@ const Chat = ({ route, navigation, db, isConnected }) => {
     useEffect(() => {
         navigation.setOptions({ title: name });
 
-        let unsubMessages;
+        if (!isConnected) {
+            loadCachedMessages();
+            return;
+        }
 
+        let unsubMessages;
         const loadMessages = async () => {
             setIsLoading(true);
             try {
-                if (isConnected) {
-                    // Clean up previous subscription
-                    if (unsubMessages) unsubMessages();
+                // Create query
+                const q = query(collection(db, "messages"), orderBy("createdAt", "desc")); // Fetching messages - "newes first"
 
-                    // Create query
-                    const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
-                    // Fetching messages - "newes first"
-
-                    // Real-time messages listener
-                    unsubMessages = onSnapshot(q, (querySnapshot) => {
-                        const newMessages = querySnapshot.docs.map((doc) => {
-                            const data = doc.data();
-                            const createdAt = data.createdAt
-                                ? new Date(data.createdAt.toMillis())
-                                : new Date();
-                            return {
-                                _id: doc.id,
-                                ...data,
-                                createdAt
-                            };
-                        });
-                        setMessages(newMessages);
-                        setIsLoading(false);
+                // Real-time messages listener
+                unsubMessages = onSnapshot(q, (querySnapshot) => {
+                    const newMessages = querySnapshot.docs.map((doc) => {
+                        const data = doc.data();
+                        const createdAt = data.createdAt
+                            ? new Date(data.createdAt.toMillis())
+                            : new Date();
+                        return {
+                            _id: doc.id,
+                            ...data,
+                            createdAt
+                        };
                     });
-                }
+                    setMessages(newMessages);
+                    cacheMessages(newMessages);
+                    setIsLoading(false);
+                });
             } catch (error) {
                 console.error("Loading messages failed:", error);
                 setError("Failed to laod messages");
                 setIsLoading(false);
+                loadCachedMessages();
             }
         };
 
