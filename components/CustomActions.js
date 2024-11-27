@@ -1,10 +1,55 @@
-import { TouchableOpacity, Text, View, StyleSheet, Alert } from "react-native";
+// components/CustomActions.js
 
-const CustomActions = () => {
+import { TouchableOpacity, Text, View, StyleSheet, Alert } from "react-native";
+import { useActionSheet } from "@expo/react-native-action-sheet";
+
+const CustomActions = ({ wrapperStyle, iconTextStyle, onSend }) => {
+    const actionSheet = useActionSheet();
+
+    const onActionPress = () => {
+        const options = ["Choose From Library", "Take Picture", "Send Location", "Cancel"];
+        const cancelButtonIndex = options.length - 1;
+        actionSheet.showActionSheetWithOptions(
+            {
+                options,
+                cancelButtonIndex
+            },
+            async (buttonIndex) => {
+                switch (buttonIndex) {
+                    case 0:
+                        pickImage();
+                        return;
+                    case 1:
+                        takePhoto();
+                        return;
+                    case 2:
+                        getLocation();
+                    default:
+                }
+            }
+        );
+    };
+
+    const getLocation = async () => {
+        let permissions = await Location.requestForegroundPermissionsAsync();
+
+        if (permissions?.granted) {
+            const location = await Location.getCurrentPositionAsync({});
+            if (location) {
+                onSend({
+                    location: {
+                        longitude: location.coords.longitude,
+                        latitude: location.coords.latitude
+                    }
+                });
+            } else Alert.alert("Error while loading your location");
+        } else Alert.alert("Permission haven't been granted");
+    };
+
     return (
-        <TouchableOpacity>
-            <View>
-                <Text>+</Text>
+        <TouchableOpacity style={styles.container} onPress={onActionPress}>
+            <View style={[styles.wrapper, wrapperStyle]}>
+                <Text style={[styles.iconText, iconTextStyle]}>+</Text>
             </View>
         </TouchableOpacity>
     );
