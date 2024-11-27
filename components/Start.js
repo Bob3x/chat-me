@@ -1,3 +1,5 @@
+// components/Start.js
+
 import { useState } from "react";
 import {
     StyleSheet,
