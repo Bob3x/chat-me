@@ -1,3 +1,5 @@
+// components/Chat.js
+
 import React, { useState, useEffect } from "react";
 import { GiftedChat, Bubble, Send, InputToolbar, SystemMessage } from "react-native-gifted-chat";
 import {
@@ -19,6 +21,7 @@ import {
 import PropTypes from "prop-types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomActions from "./CustomActions";
+import MapView from "react-native-maps";
 
 const Chat = ({ route, navigation, db, isConnected }) => {
     const [messages, setMessages] = useState([]);
@@ -216,6 +219,24 @@ const Chat = ({ route, navigation, db, isConnected }) => {
         return <CustomActions {...props} />;
     };
 
+    const renderCustomView = (props) => {
+        const { currentMessage } = props;
+        if (currentMessage.location) {
+            return (
+                <MapView
+                    style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
+                    region={{
+                        latitude: currentMessage.location.latitude,
+                        longitude: currentMessage.location.longtitude,
+                        latitude: 0.0922,
+                        longitude: 0.0421
+                    }}
+                />
+            );
+        }
+        return null;
+    };
+
     return (
         <View style={[styles.container, { backgroundColor }]}>
             {error ? <SystemMessage text={error} textStyle={styles.errorText} /> : null}
@@ -225,7 +246,8 @@ const Chat = ({ route, navigation, db, isConnected }) => {
                 renderInputToolbar={renderInputToolbar}
                 renderSend={renderSend}
                 renderLoading={renderLoading}
-                renderCustomActions={renderCustomActions}
+                renderActions={renderCustomActions}
+                renderCustomView={renderCustomView}
                 onSend={(messages) => onSend(messages)}
                 user={{ _id: userID }}
                 placeholder="Type a message"
