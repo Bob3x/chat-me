@@ -14,12 +14,12 @@ const Stack = createNativeStackNavigator();
 const App = () => {
     console.log("Env vars loaded:", !!process.env.EXPO_PUBLIC_FIREBASE_API_KEY);
     const firebaseConfig = {
-        apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
-        authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
-        projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
-        storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
-        messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-        appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID
+        apiKey: "AIzaSyCfGyh2glxqbQNPVhWXN9o5VqVOkvoGxoc",
+        authDomain: "chat-me-app-4769c.firebaseapp.com",
+        projectId: "chat-me-app-4769c",
+        storageBucket: "chat-me-app-4769c.firebasestorage.app",
+        messagingSenderId: "1056529809586",
+        appId: "1:1056529809586:web:e7da97ec48118512d409ab"
     };
     console.log("Firebase Config:", firebaseConfig);
     // Initialize Firebase and checks for duplicates
