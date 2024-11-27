@@ -18,6 +18,7 @@ import {
 } from "firebase/firestore";
 import PropTypes from "prop-types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomActions from "./CustomActions";
 
 const Chat = ({ route, navigation, db, isConnected }) => {
     const [messages, setMessages] = useState([]);
@@ -211,6 +212,10 @@ const Chat = ({ route, navigation, db, isConnected }) => {
         </View>
     );
 
+    const renderCustomActions = (props) => {
+        return <CustomActions {...props} />;
+    };
+
     return (
         <View style={[styles.container, { backgroundColor }]}>
             {error ? <SystemMessage text={error} textStyle={styles.errorText} /> : null}
@@ -220,6 +225,7 @@ const Chat = ({ route, navigation, db, isConnected }) => {
                 renderInputToolbar={renderInputToolbar}
                 renderSend={renderSend}
                 renderLoading={renderLoading}
+                renderCustomActions={renderCustomActions}
                 onSend={(messages) => onSend(messages)}
                 user={{ _id: userID }}
                 placeholder="Type a message"
