@@ -75,26 +75,33 @@ const Chat = ({ route, navigation, db, isConnected }) => {
         }
     };
 
-    const onSend = async (newMessages) => {
+    const onSend = async (newMessages = []) => {
         try {
             setIsLoading(true);
+            const message = newMessages[0];
 
-            // Format and save message
-            const message = {
-                ...newMessages[0],
+            // Base message structure
+            const messageToSend = {
+                _id: Math.round(Math.random() * 1000000),
                 createdAt: isConnected ? serverTimestamp() : new Date(),
                 user: {
                     _id: userID,
                     name: name
-                }
+                },
+                ...message // Include any additional data (text, image, location)
             };
+
             if (isConnected) {
-                await addDoc(collection(db, "messages"), message);
+                await addDoc(collection(db, "messages"), messageToSend);
             } else {
-                const newOfflineMessages = [...offlineMessages, message];
+                // Handle offline storage
+                const newOfflineMessages = [...offlineMessages, messageToSend];
                 setOfflineMessages(newOfflineMessages);
-                await AsyncStorage.setItem("offline_messages".JSON.stringify(offlineMessages));
-                setMessages((previousMessages) => GiftedChat.append(previousMessages, newMessages));
+                await AsyncStorage.setItem("offline_messages", JSON.stringify(newOfflineMessages));
+                // Update UI immediately
+                setMessages((previousMessages) =>
+                    GiftedChat.append(previousMessages, [messageToSend])
+                );
             }
         } catch (error) {
             console.error("Failed to send message:", error);
@@ -216,7 +223,16 @@ const Chat = ({ route, navigation, db, isConnected }) => {
     );
 
     const renderCustomActions = (props) => {
-        return <CustomActions {...props} />;
+        return (
+            <CustomActions
+                {...props}
+                storage={storage}
+                userID={userID}
+                onSend={(message) => onSend([message])}
+                wrapperStyle={styles.actionWrapper}
+                iconTextStyle={styles.actionIcon}
+            />
+        );
     };
 
     const renderCustomView = (props) => {
@@ -253,6 +269,7 @@ const Chat = ({ route, navigation, db, isConnected }) => {
                 placeholder="Type a message"
                 alwaysShowSend
                 scrollToBottom
+                isLoadingEarlier={isLoading}
                 renderSystemMessage={(props) => (
                     <SystemMessage {...props} textStyle={styles.systemMessageText} />
                 )}
@@ -335,6 +352,17 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: "#707070",
         fontStyle: "italic"
+    },
+    actionWrapper: {
+        width: 26,
+        height: 26,
+        marginLeft: 10,
+        marginBottom: 10
+    },
+    actionIcon: {
+        fontSize: 16,
+        color: "#000",
+        fontWeight: "bold"
     }
 });
 
