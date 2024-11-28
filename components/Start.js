@@ -139,7 +139,13 @@ const Start = ({ navigation }) => {
 };
 
 Start.propTypes = {
-    navigation: PropTypes.object.isRequired
+    navigation: PropTypes.shape({
+        navigate: PropTypes.func.isRequired,
+        setOptions: PropTypes.func.isRequired
+    }).isRequired,
+    route: PropTypes.shape({
+        params: PropTypes.object
+    })
 };
 
 // Styles
