@@ -8,7 +8,7 @@ import {
     TouchableOpacity,
     TextInput,
     ImageBackground,
-    Alert
+    ActivityIndicator
 } from "react-native";
 import { getAuth, signInAnonymously } from "firebase/auth";
 import PropTypes from "prop-types";
@@ -20,32 +20,64 @@ const Start = ({ navigation }) => {
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
+    // Colors option
     const colors = ["#090C08", "#474056", "#8A95A5", "#B9C6AE"];
+    // Colors description as themes for accessibility
+    const colorDescriptions = {
+        "#090C08": "Dark theme",
+        "#474056": "Purple theme",
+        "#8A95A5": "Grey theme",
+        "#B9C6AE": "Green theme"
+    };
 
-    // Sign in
+    // Sign in with validation
+    const validateInput = (text) => {
+        setName(text);
+        if (!text.trim()) {
+            setError("Username is required");
+            return false;
+        }
+        if (text.length < 3) {
+            setError("Username must be at least 3 characters");
+            return false;
+        }
+        setError("");
+        return true;
+    };
+
+    // Enhanced sign in with validation
     const signInUser = async () => {
-        if (!name.trim()) {
-            setError("Please enter a username");
+        if (!validateInput(name)) {
             return;
         }
-        setIsLoading(true);
-        setError("");
+        if (!backgroundColor) {
+            setError("Please select a background color");
+            return;
+        }
 
         try {
+            setIsLoading(true);
             const auth = getAuth();
             const result = await signInAnonymously(auth);
             navigation.navigate("Chat", {
                 userID: result.user.uid,
-                name: name,
-                backgroundColor: backgroundColor
+                name,
+                backgroundColor
             });
         } catch (err) {
             setError("Unable to sign in, try again later!");
-            console.error("Sing in failed!", err);
+            console.error("Sign in failed:", err);
         } finally {
             setIsLoading(false);
         }
     };
+
+    const LoadingOverlay = () => (
+        <View style={styles.loadingOverlay}>
+            <ActivityIndicator size="large" color="#757083" />
+            <Text style={styles.loadingText}>Signing in...</Text>
+        </View>
+    );
 
     return (
         <View style={styles.container}>
@@ -71,7 +103,7 @@ const Start = ({ navigation }) => {
                                 key={index}
                                 accessible={true}
                                 accessibilityRole="button"
-                                accessibilityLabel="Color picker"
+                                accessibilityLabel={`Color theme ${index + 1}: ${colorDescriptions[color]}`}
                                 accessibilityHint="Choose your chat's background color"
                                 style={[
                                     styles.colorCircle,
@@ -96,6 +128,7 @@ const Start = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
+            {isLoading && <LoadingOverlay />}
         </View>
     );
 };
@@ -109,13 +142,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
     },
-
     imgContainer: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center"
     },
-
     innerContainer: {
         width: "88%",
         alignItems: "center",
@@ -123,14 +154,12 @@ const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 10
     },
-
     appTitle: {
         fontSize: 34,
         fontWeight: "600",
         color: "#FFFFFF",
         marginBottom: 30
     },
-
     textInput: {
         width: "100%",
         padding: 15,
@@ -141,33 +170,28 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         backgroundColor: "#FFFFFF"
     },
-
     textColors: {
         fontSize: 16,
         fontWeight: "500",
         color: "#757083",
         marginBottom: 15
     },
-
     colorsContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
         width: "80%",
         marginBottom: 25
     },
-
     colorCircle: {
         width: 40,
         height: 40,
         borderRadius: 20,
         margin: 5
     },
-
     selectedColor: {
         borderWidth: 3,
         borderColor: "#757083"
     },
-
     button: {
         backgroundColor: "#757083",
         width: "100%",
@@ -175,17 +199,14 @@ const styles = StyleSheet.create({
         padding: 15,
         alignItems: "center"
     },
-
     buttonText: {
         fontSize: 16,
         fontWeight: "600",
         color: "#FFFFFF"
     },
-
     buttonDisabled: {
         opacity: 0.7
     },
-
     inputError: {
         borderColor: "#FF3B30"
     },
@@ -194,6 +215,21 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginTop: 5,
         marginBottom: 10
+    },
+    loadingOverlay: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: "rgba(0, 0, 0, 0.6)",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    loadingText: {
+        color: "#FFFFFF",
+        marginTop: 10,
+        fontSize: 16
     }
 });
 
