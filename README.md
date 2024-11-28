@@ -25,7 +25,7 @@ A mobile chat application built with React Native and Expo that enables real-tim
 
 ## Installation and Setup
 
-\*\*1. Clone the repository
+**1. Clone the repository**
 
 ```
 git clone https://github.com/bob3x/chat-me.git
@@ -35,13 +35,13 @@ git clone https://github.com/bob3x/chat-me.git
 cd chat-me
 ```
 
-\*\*2. Install dependencies
+**2. Install dependencies**
 
 ```
 npm install
 ```
 
-\*\*3. Create Firebase configuration
+**3. Create Firebase configuration**
 
 -   Create Firebase project
 -   Enable Authentication and Firestore
@@ -55,7 +55,7 @@ npm install
     EXPO_PUBLIC_FIREBASE_APP_ID=your_app_id
     ```
 
-\*\*4. Start development server
+**4. Start development server**
 
 ```
 npx expo start
