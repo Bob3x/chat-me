@@ -14,7 +14,6 @@ import { Alert } from "react-native";
 const Stack = createNativeStackNavigator();
 
 const App = () => {
-    console.log("Env vars loaded:", !!process.env.EXPO_PUBLIC_FIREBASE_API_KEY);
     const firebaseConfig = {
         apiKey: "AIzaSyCfGyh2glxqbQNPVhWXN9o5VqVOkvoGxoc",
         authDomain: "chat-me-app-4769c.firebaseapp.com",
@@ -23,7 +22,7 @@ const App = () => {
         messagingSenderId: "1056529809586",
         appId: "1:1056529809586:web:e7da97ec48118512d409ab"
     };
-    console.log("Firebase Config:", firebaseConfig);
+
     // Initialize Firebase and checks for duplicates
     const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
