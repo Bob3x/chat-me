@@ -42,7 +42,6 @@ npm install
 -   Enable Authentication and Firestore
 -   Create a `.env` file in the root directory:
 
-````properties
     EXPO_PUBLIC_FIREBASE_API_KEY=your_api_key
     EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=your_domain
     EXPO_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
@@ -55,10 +54,11 @@ npm install
 npx expo start
 
 ## Development Requirements
-- Node.js
-- Expo CLI
-- Android Studio (for Android development)
-- Xcode (for iOS development)
+
+-   Node.js
+-   Expo CLI
+-   Android Studio (for Android development)
+-   Xcode (for iOS development)
 
 ## Screenshots
 
@@ -83,5 +83,4 @@ npx expo start
 
 ## License
 
-MIT```
-````
+MIT
