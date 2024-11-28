@@ -112,73 +112,73 @@ const styles = StyleSheet.create({
 
     imgContainer: {
         flex: 1,
-        width: "100%",
-        height: "100%", // Add explicit height
         justifyContent: "center",
         alignItems: "center"
-    },
-
-    appTitle: {
-        fontSize: 34,
-        fontWeight: "bold",
-        color: "#FFFFFF",
-        marginBottom: 30
     },
 
     innerContainer: {
         width: "88%",
         alignItems: "center",
-        backgroundColor: "#FFFFFF",
+        backgroundColor: "rgba(255, 255, 255, 0.9)",
         padding: 20,
         borderRadius: 10
     },
 
+    appTitle: {
+        fontSize: 34,
+        fontWeight: "600",
+        color: "#FFFFFF",
+        marginBottom: 30
+    },
+
     textInput: {
-        width: "88%",
+        width: "100%",
         padding: 15,
         borderWidth: 1,
-        borderRadius: 5,
-        marginTop: 15,
-        marginBottom: 15,
-        opacity: 0.5
+        borderColor: "#757083",
+        borderRadius: 8,
+        fontSize: 16,
+        marginBottom: 20,
+        backgroundColor: "#FFFFFF"
     },
 
     textColors: {
         fontSize: 16,
-        fontWeight: "300",
-        color: "#171717",
-        marginBottom: 10
+        fontWeight: "500",
+        color: "#757083",
+        marginBottom: 15
     },
 
     colorsContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
         width: "80%",
-        marginBottom: 20
+        marginBottom: 25
     },
 
     colorCircle: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-        margin: 10
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        margin: 5
     },
 
     selectedColor: {
-        borderWidth: 2,
+        borderWidth: 3,
         borderColor: "#757083"
     },
 
     button: {
         backgroundColor: "#757083",
+        width: "100%",
         borderRadius: 8,
-        padding: 10,
+        padding: 15,
         alignItems: "center"
     },
 
     buttonText: {
         fontSize: 16,
-        fontWeight: 600,
+        fontWeight: "600",
         color: "#FFFFFF"
     },
 
@@ -187,11 +187,13 @@ const styles = StyleSheet.create({
     },
 
     inputError: {
-        borderColor: "red"
+        borderColor: "#FF3B30"
     },
     errorText: {
-        color: "red",
-        marginTop: 5
+        color: "#FF3B30",
+        fontSize: 14,
+        marginTop: 5,
+        marginBottom: 10
     }
 });
 
