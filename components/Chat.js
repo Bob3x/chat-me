@@ -124,7 +124,7 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
             setIsLoading(true);
             try {
                 // Create query
-                const q = query(collection(db, "messages"), orderBy("createdAt", "desc")); // Fetching messages - "newes first"
+                const q = query(collection(db, "messages"), orderBy("createdAt", "desc")); // Fetching messages - "newest first"
 
                 // Real-time messages listener
                 unsubMessages = onSnapshot(q, (querySnapshot) => {
@@ -257,6 +257,7 @@ const Chat = ({ route, navigation, db, isConnected, storage }) => {
         <View style={[styles.container, { backgroundColor }]}>
             {error ? <SystemMessage text={error} textStyle={styles.errorText} /> : null}
             <GiftedChat
+                // All the props and dependencies
                 messages={messages}
                 renderBubble={renderBubble}
                 renderInputToolbar={renderInputToolbar}
@@ -307,7 +308,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center"
     },
-
     inputToolbar: {
         backgroundColor: "#FFFFFF",
         borderTopWidth: 1,
@@ -325,7 +325,6 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5
     },
-
     sendContainer: {
         justifyContent: "center",
         alignItems: "center",
