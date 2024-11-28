@@ -23,7 +23,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomActions from "./CustomActions";
 import MapView from "react-native-maps";
 
-const Chat = ({ route, navigation, db, isConnected }) => {
+const Chat = ({ route, navigation, db, isConnected, storage }) => {
     const [messages, setMessages] = useState([]);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -243,9 +243,9 @@ const Chat = ({ route, navigation, db, isConnected }) => {
                     style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
                     region={{
                         latitude: currentMessage.location.latitude,
-                        longitude: currentMessage.location.longtitude,
-                        latitude: 0.0922,
-                        longitude: 0.0421
+                        longitude: currentMessage.location.longitude,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421
                     }}
                 />
             );

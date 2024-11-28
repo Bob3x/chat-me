@@ -84,7 +84,7 @@ const Start = ({ navigation }) => {
             <ImageBackground
                 source={require("../assets/Background.png")}
                 style={styles.imgContainer}>
-                <Text style={styles.appTitle}>Chat Me</Text>
+                <Text style={styles.appTitle}>Chat-Me</Text>
                 <View style={styles.innerContainer}>
                     {error ? <Text style={styles.errorText}>{error}</Text> : null}
                     <TextInput
@@ -115,14 +115,19 @@ const Start = ({ navigation }) => {
                         ))}
                     </View>
                     <TouchableOpacity // Chat button (switch screens)
-                        accesible={true}
+                        accessible={true}
                         accessibilityLabel="Start Chatting"
-                        accessibilityRole="Button"
+                        accessibilityRole="button"
                         accessibilityHint="Open your chat screen"
                         style={[styles.button, isLoading && styles.buttonDisabled]}
                         onPress={signInUser}
-                        disabled={isLoading}>
-                        <Text style={styles.buttonText}>
+                        accessibilityState={{
+                            disabled: isLoading,
+                            busy: isLoading
+                        }}
+                        disabled={isLoading}
+                        activeOpacity={0.7}>
+                        <Text style={[styles.buttonText, isLoading && styles.buttonTextDisabled]}>
                             {isLoading ? "Signing in..." : "Start Chatting"}
                         </Text>
                     </TouchableOpacity>
