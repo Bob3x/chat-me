@@ -63,7 +63,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
             }
 
             const result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                mediaTypes: "images",
                 quality: 0.5
             });
 
@@ -147,6 +147,14 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
     );
 };
 
+CustomActions.propTypes = {
+    wrapperStyle: PropTypes.object,
+    iconTextStyle: PropTypes.object,
+    onSend: PropTypes.func.isRequired,
+    storage: PropTypes.object.isRequired,
+    userID: PropTypes.string.isRequired
+};
+
 const styles = StyleSheet.create({
     container: {
         width: 26,
@@ -170,13 +178,5 @@ const styles = StyleSheet.create({
         textAlign: "center"
     }
 });
-
-CustomActions.propTypes = {
-    wrapperStyle: PropTypes.object,
-    iconTextStyle: PropTypes.object,
-    onSend: PropTypes.func.isRequired,
-    storage: PropTypes.object.isRequired,
-    userID: PropTypes.string.isRequired
-};
 
 export default CustomActions;
